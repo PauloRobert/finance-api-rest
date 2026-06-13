@@ -1,5 +1,3 @@
-import pytest
-
 
 class TestRegister:
     """Testes de registro de usuário"""

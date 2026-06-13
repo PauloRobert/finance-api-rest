@@ -1,5 +1,3 @@
-import pytest
-
 from app.models.transaction import Transaction
 
 

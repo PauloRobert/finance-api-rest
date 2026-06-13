@@ -1,5 +1,3 @@
-import pytest
-
 from app.services.auth_service import (
     create_access_token,
     decode_token,

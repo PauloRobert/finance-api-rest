@@ -5,10 +5,16 @@ from app.config import get_settings
 settings = get_settings()
 
 # Configuração do engine com pool para performance
+connect_args = {}
+if "sqlite" in settings.database_url:
+    connect_args["check_same_thread"] = False
+
 engine = create_engine(
     settings.database_url,
-    connect_args={"check_same_thread": False} if "sqlite" in settings.database_url else {},
+    connect_args=connect_args,
     pool_pre_ping=True,
+    pool_size=5,
+    max_overflow=10,
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

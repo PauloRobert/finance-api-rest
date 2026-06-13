@@ -6,9 +6,10 @@ API REST para o aplicativo FinanceApp, construída com FastAPI.
 
 - **FastAPI** — Framework web assíncrono de alta performance
 - **SQLAlchemy** — ORM para acesso ao banco de dados
-- **SQLite** — Banco de dados (desenvolvimento)
+- **PostgreSQL** — Banco de dados (produção)
+- **SQLite** — Banco de dados (desenvolvimento local)
 - **JWT (python-jose)** — Autenticação via token
-- **Passlib + bcrypt** — Hash de senhas
+- **bcrypt** — Hash de senhas
 - **Pydantic** — Validação de dados
 
 ## Instalação
@@ -23,6 +24,20 @@ venv\Scripts\activate
 # Instalar dependências
 pip install -r requirements.txt
 ```
+
+## Configuração do Banco de Dados
+
+### Desenvolvimento local (SQLite)
+Sem configuração adicional — o padrão é SQLite.
+
+### Produção (PostgreSQL)
+Defina a variável de ambiente `DATABASE_URL` com a connection string do PostgreSQL:
+
+```bash
+DATABASE_URL=postgresql://usuario:senha@host:5432/finance_db
+```
+
+No DigitalOcean App Platform, adicione essa variável nas configurações do app apontando para o Managed Database.
 
 ## Execução
 

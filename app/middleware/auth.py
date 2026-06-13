@@ -1,6 +1,7 @@
 from fastapi import Depends, HTTPException, status
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
+
 from app.database import get_db
 from app.models.user import User
 from app.services.auth_service import decode_token
@@ -11,7 +12,7 @@ security = HTTPBearer()
 
 async def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(security),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ) -> User:
     """Middleware que valida o token JWT e retorna o usuário autenticado"""
     token = credentials.credentials
@@ -39,4 +40,3 @@ async def get_current_user(
         )
 
     return user
-

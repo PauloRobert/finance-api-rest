@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.database import engine, Base
+
+from app.database import Base, engine
 from app.routes import auth, transaction
 
 # Criar tabelas no banco
@@ -33,4 +34,3 @@ app.include_router(transaction.router, prefix="/api/v1")
 def health_check():
     """Endpoint de verificação de saúde da API"""
     return {"status": "online", "version": "1.0.0"}
-

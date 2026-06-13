@@ -1,9 +1,11 @@
-from pydantic_settings import BaseSettings
 from functools import lru_cache
+
+from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
     """Configurações da aplicação carregadas do .env"""
+
     database_url: str = "sqlite:///./finance.db"
     secret_key: str = "finance-app-dev-secret-key-2026"
     algorithm: str = "HS256"
@@ -17,4 +19,3 @@ class Settings(BaseSettings):
 def get_settings() -> Settings:
     """Retorna instância cacheada das configurações"""
     return Settings()
-

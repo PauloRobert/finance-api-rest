@@ -5,8 +5,8 @@ from sqlalchemy.orm import sessionmaker
 
 from app.database import Base, get_db
 from app.main import app
-from app.services.auth_service import create_access_token, hash_password
 from app.models.user import User
+from app.services.auth_service import create_access_token, hash_password
 
 # Banco em memória para testes
 SQLALCHEMY_TEST_DATABASE_URL = "sqlite:///./test.db"
@@ -39,6 +39,7 @@ def db_session():
 @pytest.fixture
 def client(db_session):
     """TestClient com override do banco de dados"""
+
     def override_get_db():
         try:
             yield db_session

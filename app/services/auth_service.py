@@ -1,7 +1,9 @@
 from datetime import datetime, timedelta, timezone
-from jose import JWTError, jwt
+
 import bcrypt
+from jose import JWTError, jwt
 from sqlalchemy.orm import Session
+
 from app.config import get_settings
 from app.models.user import User
 
@@ -18,8 +20,7 @@ def hash_password(password: str) -> str:
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Verifica se a senha confere com o hash"""
     return bcrypt.checkpw(
-        plain_password.encode("utf-8"),
-        hashed_password.encode("utf-8")
+        plain_password.encode("utf-8"), hashed_password.encode("utf-8")
     )
 
 
@@ -36,7 +37,9 @@ def create_access_token(data: dict) -> str:
 def decode_token(token: str) -> dict | None:
     """Decodifica e valida token JWT"""
     try:
-        payload = jwt.decode(token, settings.secret_key, algorithms=[settings.algorithm])
+        payload = jwt.decode(
+            token, settings.secret_key, algorithms=[settings.algorithm]
+        )
         return payload
     except JWTError:
         return None

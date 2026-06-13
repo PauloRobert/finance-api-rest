@@ -1,13 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
+
 from app.database import get_db
 from app.models.user import User
-from app.schemas.auth import UserCreate, UserLogin, TokenResponse, UserResponse
+from app.schemas.auth import TokenResponse, UserCreate, UserLogin, UserResponse
 from app.services.auth_service import (
-    hash_password,
     authenticate_user,
     create_access_token,
     get_user_by_username,
+    hash_password,
 )
 
 router = APIRouter(prefix="/auth", tags=["Autenticação"])
@@ -17,7 +18,7 @@ router = APIRouter(prefix="/auth", tags=["Autenticação"])
     "/register",
     response_model=UserResponse,
     status_code=status.HTTP_201_CREATED,
-    summary="Registrar novo usuário"
+    summary="Registrar novo usuário",
 )
 def register(user_data: UserCreate, db: Session = Depends(get_db)):
     """Cria um novo usuário no sistema"""
@@ -25,14 +26,12 @@ def register(user_data: UserCreate, db: Session = Depends(get_db)):
     existing = get_user_by_username(db, user_data.username)
     if existing:
         raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Username já está em uso"
+            status_code=status.HTTP_409_CONFLICT, detail="Username já está em uso"
         )
 
     # Criar usuário
     new_user = User(
-        username=user_data.username,
-        hashed_password=hash_password(user_data.password)
+        username=user_data.username, hashed_password=hash_password(user_data.password)
     )
     db.add(new_user)
     db.commit()
@@ -42,9 +41,7 @@ def register(user_data: UserCreate, db: Session = Depends(get_db)):
 
 
 @router.post(
-    "/login",
-    response_model=TokenResponse,
-    summary="Autenticar e obter token JWT"
+    "/login", response_model=TokenResponse, summary="Autenticar e obter token JWT"
 )
 def login(credentials: UserLogin, db: Session = Depends(get_db)):
     """Autentica o usuário e retorna um token JWT"""
@@ -60,4 +57,3 @@ def login(credentials: UserLogin, db: Session = Depends(get_db)):
     access_token = create_access_token(data={"sub": user.id})
 
     return TokenResponse(access_token=access_token)
-

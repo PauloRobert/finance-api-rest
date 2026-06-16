@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import Base, engine
-from app.routes import auth, transaction, user
+from app.routes import auth, pix, transaction, transfer_routes, user
 
 # Criar tabelas no banco
 Base.metadata.create_all(bind=engine)
@@ -29,6 +29,8 @@ app.add_middleware(
 app.include_router(auth.router, prefix="/api/v1")
 app.include_router(transaction.router, prefix="/api/v1")
 app.include_router(user.router, prefix="/api/v1")
+app.include_router(pix.router, prefix="/api/v1")
+app.include_router(transfer_routes.router, prefix="/api/v1")
 
 
 @app.get("/", tags=["Health"])

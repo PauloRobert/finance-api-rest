@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.database import get_db
+from app.models.finance import Card, CardType
 from app.models.user import User
 from app.schemas.auth import TokenResponse, UserCreate, UserLogin, UserResponse
 from app.services.auth_service import (
@@ -36,6 +37,34 @@ def register(user_data: UserCreate, db: Session = Depends(get_db)):
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
+
+    # Criar cartões padrão para o novo usuário
+    import uuid
+    import hashlib
+
+    last_four_debit = f"{int(hashlib.sha256(new_user.id.encode()).hexdigest(), 16) % 10000:04d}"
+    last_four_credit = f"{(int(hashlib.sha256((new_user.id + 'cc').encode()).hexdigest(), 16) % 10000):04d}"
+
+    debit_card = Card(
+        user_id=new_user.id,
+        card_name=f"Débito IF Bank",
+        last_four=last_four_debit,
+        card_type=CardType.DEBIT,
+        credit_limit=0.0,
+        available_limit=0.0,
+    )
+    credit_card = Card(
+        user_id=new_user.id,
+        card_name=f"Crédito IF Bank Gold",
+        last_four=last_four_credit,
+        card_type=CardType.CREDIT,
+        credit_limit=5000.0,
+        available_limit=5000.0,
+        due_day="15",
+    )
+    db.add(debit_card)
+    db.add(credit_card)
+    db.commit()
 
     return new_user
 

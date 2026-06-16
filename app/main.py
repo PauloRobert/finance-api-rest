@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.database import Base, engine
 from app.routes import auth, pix, transaction, transfer_routes, user
 from app.routes.finance_routes import card_router, deposit_router, investment_router, payment_router
+from app.routes.stocks import router as stocks_router
 
 # Criar tabelas no banco
 Base.metadata.create_all(bind=engine)
@@ -36,6 +37,7 @@ app.include_router(deposit_router, prefix="/api/v1")
 app.include_router(payment_router, prefix="/api/v1")
 app.include_router(card_router, prefix="/api/v1")
 app.include_router(investment_router, prefix="/api/v1")
+app.include_router(stocks_router, prefix="/api/v1")
 
 
 @app.get("/", tags=["Health"])
